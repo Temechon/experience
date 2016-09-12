@@ -27,7 +27,7 @@ class Game {
 
         this.scene = new BABYLON.Scene(this.engine);
 
-        let camera = new BABYLON.ArcRotateCamera('', -1.5, 1, 10, new BABYLON.Vector3(0, 0, 0), this.scene);
+        let camera = new BABYLON.ArcRotateCamera('', -1.5, 1, 100, new BABYLON.Vector3(0, 0, 0), this.scene);
         camera.attachControl(this.engine.getRenderingCanvas());
         let light = new BABYLON.HemisphericLight('', new BABYLON.Vector3(0, 1, 0), this.scene);
         light.intensity = 0.7;
@@ -58,7 +58,39 @@ class Game {
 
     private _init () {
         this.scene.debugLayer.show();
+        
+        let center = null;
+        let red = new BABYLON.StandardMaterial('red', this.scene);
+        red.diffuseColor = BABYLON.Color3.Red();
 
-        BABYLON.Mesh.CreateBox('', 1, this.scene);
+        this.scene.constantlyUpdateMeshUnderPointer = true;
+        this.scene.onPointerMove = (evt, pr) => {
+            if (pr.hit) {
+                if (center && center.name != pr.pickedMesh.name) {
+                    center.material = null;
+                }
+                center = pr.pickedMesh;
+                center.material = red;                
+            }
+        }
+    }
+    
+    /**
+     * Returns an array of neighbors of the given face in a given radius
+     */
+    private _getNeighbours (face : BABYLON.Mesh, radius:number) {
+        let res = [];
+        
+        
+        for (let mesh of this.scene.meshes) {
+            if (mesh.name == face.name) {
+                continue;                
+            }                  
+            // get distance face - mesh   
+            let dist = BABYLON.Vector3.DistanceSquared(face.position, mesh.position);
+            if (dist <= radius* radius) {
+                res.push(mesh);
+            }               
+        }
     }
 }

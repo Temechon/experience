@@ -19,6 +19,7 @@ class Preloader {
     
     public loadAssets() {
         
+        this._addMesh('geosphere');
         this._loader.load();
     }
     
@@ -32,7 +33,7 @@ class Preloader {
         } else {
             var task = this._loader.addMeshTask(folder, '', `assets/${folder}/`, `${folder}.babylon`);
         }
-        task.onSuccess = this._addMeshAssetToGame.bind(this);
+        // task.onSuccess = this._addMeshAssetToGame.bind(this);
     }
     
     private _addMeshAssetToGame(t: BABYLON.MeshAssetTask) {

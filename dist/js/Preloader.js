@@ -8,6 +8,7 @@ var Preloader = (function () {
         this._loader.onFinish = this.onFinish.bind(this);
     }
     Preloader.prototype.loadAssets = function () {
+        this._addMesh('geosphere');
         this._loader.load();
     };
     Preloader.prototype.onFinish = function () {
@@ -20,7 +21,7 @@ var Preloader = (function () {
         else {
             var task = this._loader.addMeshTask(folder, '', "assets/" + folder + "/", folder + ".babylon");
         }
-        task.onSuccess = this._addMeshAssetToGame.bind(this);
+        // task.onSuccess = this._addMeshAssetToGame.bind(this);
     };
     Preloader.prototype._addMeshAssetToGame = function (t) {
         var parent = new BABYLON.Mesh('', this._scene);
